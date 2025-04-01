@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="ExampleService"
+             targetNamespace="http://example.com/soap-server"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://example.com/soap-server"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <!-- Типы данных -->
+    <types>
+        <xsd:schema targetNamespace="http://example.com/soap-server">
+            <!-- Запрос для метода sayHello -->
+            <xsd:element name="getDateRequest">
+                <xsd:complexType/>
+            </xsd:element>
+
+            <!-- Ответ от метода sayHello -->
+            <xsd:element name="getDateResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="date" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <!-- Запрос для метода sayHello -->
+            <xsd:element name="sayHelloRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="name" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <!-- Ответ от метода sayHello -->
+            <xsd:element name="sayHelloResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="greeting" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </types>
+
+    <!-- Сообщения -->
+    <message name="sayHelloRequest">
+        <part name="parameters" element="tns:sayHelloRequest"/>
+    </message>
+    <message name="sayHelloResponse">
+        <part name="parameters" element="tns:sayHelloResponse"/>
+    </message>
+
+    <message name="getDateRequest">
+        <part name="parameters" element="tns:getDateRequest"/>
+    </message>
+    <message name="getDateResponse">
+        <part name="parameters" element="tns:getDateResponse"/>
+    </message>
+
+
+    <!-- Порт (интерфейс) -->
+    <portType name="ExamplePortType">
+        <operation name="sayHello">
+            <input message="tns:sayHelloRequest"/>
+            <output message="tns:sayHelloResponse"/>
+        </operation>
+        <operation name="getDate">
+            <input message="tns:getDateRequest"/>
+            <output message="tns:getDateResponse"/>
+        </operation>
+    </portType>
+
+
+    <!-- Привязка к SOAP -->
+    <binding name="ExampleBinding" type="tns:ExamplePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="sayHello">
+            <soap:operation soapAction="http://example.com/soap-server/sayHello"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getDate">
+            <soap:operation soapAction="http://example.com/soap-server/getDate"/>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+
+    <!-- Сервис -->
+    <service name="ExampleService">
+        <port name="ExamplePort" binding="tns:ExampleBinding">
+            <soap:address location="http://localhost:8089/soap-server.php"/>
+        </port>
+    </service>
+</definitions>
